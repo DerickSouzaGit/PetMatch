@@ -37,4 +37,4 @@
 
 1. **Clone** o repositório  
    ```bash
-   git clone https://github.com/<seu-usuario>/petmatch.git
+   git clone https://github.com/DerickSouzaGit/petmatch.git
