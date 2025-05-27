@@ -1,0 +1,233 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: #1a1f24;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+    #card-container {
+      position: relative;
+      width: 300px;
+      height: 500px;
+    }
+    .card {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-color: #2e343b;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      background-size: cover;
+      background-position: center;
+      user-select: none;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .info-container {
+      position: absolute;
+      height: 100px;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      border-radius: 16px;
+      background-color: #202429 ;
+    }
+
+    .nome {
+      font-size: 24px;
+      position: absolute;
+      color: #fff;
+      padding: 16px;
+    }
+
+    .like, .dislike {
+      position: absolute;
+      top: 20px;
+      font-size: 32px;
+      font-weight: bold;
+      padding: 8px 16px;
+      border: 4px solid;
+      border-radius: 8px;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .like { left: 20px; color: #4DED30; border-color: #4DED30; }
+    .dislike { right: 20px; color: #FF3860; border-color: #FF3860; }
+
+    /* Controles de botão */
+    .controls {
+      position: absolute;
+      bottom: 100px;
+      display: flex;
+      gap: 40px;
+    }
+    .controls button {
+      width: 60px;
+      height: 60px;
+      border: none;
+      border-radius: 50%;
+      font-size: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      transition: transform 0.2s ease;
+    }
+    #dislike-btn { background-color: #2e343b; color: #FF3860; }
+    #like-btn { background-color: #2e343b; color: #4DED30; }
+    .controls button:active { transform: scale(0.9); }
+
+    .left-window {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 400px;
+      height: 100%;
+      background-color: #202429;
+      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.5);
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    /* Estilizar o scroll para combinar com o background */
+    .left-window {
+      scrollbar-width: thin;
+      scrollbar-color: #3c454e #1a1e22;
+    }
+
+    .left-window::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .left-window::-webkit-scrollbar-track {
+      background: #15181b;
+    }
+
+    .left-window::-webkit-scrollbar-thumb {
+      background-color: #3c454e;
+      border-radius: 4px;
+    }
+
+    .card-item {
+      display: flex;
+      flex-direction: column;
+      background-color: #2e343b;
+      border-radius: 8px;
+      margin: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-image {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 16px;
+      color: #fff;
+    }
+
+    .card-content h3 {
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .card-content p {
+      margin-top: 4px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .chat-container {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 100%;
+      background-color: #2e343b;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      box-shadow: -2px 0 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .chat-header {
+      background-color: #202429;
+      padding: 16px;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    .chat-messages p {
+      margin: 8px 0;
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 16px;
+      gap: 8px;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 4px;
+    }
+
+    .chat-input button {
+      padding: 8px 16px;
+      background-color: #ff3f38;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      color: #fff;
+    }
+
+    .chat-button {
+      margin-left: auto;
+      padding: 8px 16px;
+      background-color: #ff3f38;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .top-leftwindow {
+      background-color: #1a1e22;
+      color: #fff;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .top-leftwindow h2 {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .top-leftwindow p {
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }

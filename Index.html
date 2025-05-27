@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Pet Match</title>
+    <link rel="shortcut icon" type="imagex/png" href="./img/logo16x16.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="left-window">
+    <div class="top-leftwindow">
+      <h2>Bem-vindo ao Pet Match!</h2>
+      <p>Veja seus cachorros favoritos aqui.</p>
+    </div>
+  </div>
+  </div>
+  <div id="card-container">
+    <div class="card" style="background-image: url('./img/tutorial.png'); background-size: cover; background-position: center;">
+      <div class="info-container nome">Clique Para Ver Os Cachorros</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="dislike-btn">✕</button>
+    <button id="like-btn">♥</button>
+  </div>
+  <script>
+  async function fetchRandomDogImage() {
+  const res = await fetch('https://dog.ceo/api/breeds/image/random');
+  const data = await res.json();
+  return data.message;
+  }
+
+async function fetchRandomDogName() {
+  const res = await fetch('https://randomuser.me/api/');
+  const data = await res.json();
+  const firstName = data.results[0].name.first;
+  return `${firstName}`;
+}
+
+function gerarNumeroAleatorio(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+const likeBtn = document.querySelector('#like-btn');
+const dislikeBtn = document.querySelector('#dislike-btn');
+const cardContainer = document.querySelector('#card-container');
+
+//var para ver se é primeira imagem
+let isFirstImage = true;
+
+//funcao para salvar dados
+function saveToFavorites(imgUrl, dogName, dogIdade) {
+  const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+  const newFavorite = { imgUrl, dogName, dogIdade };
+  favorites.push(newFavorite);
+  localStorage.setItem('favorites', JSON.stringify(favorites));
+  updateLeftWindow(newFavorite);
+}
+
+// abrir o chat
+function openChat(dogName) {
+  const chatContainer = document.querySelector('.chat-container');
+  chatContainer.innerHTML = `
+    <div class="chat-header">Chat com ${dogName}</div>
+    <div class="chat-messages">
+      <p><strong>${dogName}:</strong> Olá! Tudo bem?</p>
+    </div>
+    <div class="chat-input">
+      <input type="text" placeholder="Digite uma mensagem...">
+      <button>Enviar</button>
+    </div>
+  `;
+  chatContainer.style.display = 'block';
+
+  const input = chatContainer.querySelector('input');
+  const button = chatContainer.querySelector('button');
+  const messages = chatContainer.querySelector('.chat-messages');
+
+  button.addEventListener('click', () => {
+    const userMessage = input.value.trim();
+    if (userMessage) {
+      const userMessageElement = document.createElement('p');
+      userMessageElement.innerHTML = `<strong>Você:</strong> ${userMessage}`;
+      messages.appendChild(userMessageElement);
+      input.value = '';
+
+      messages.scrollTop = messages.scrollHeight; // Scroll automático
+    }
+  });
+}
+
+//atualizar o left-window com um novo cachorro
+function updateLeftWindow({ imgUrl, dogName, dogIdade }) {
+  const leftWindow = document.querySelector('.left-window');
+  const cardItem = document.createElement('div');
+  cardItem.classList.add('card-item');
+
+  const cardImage = document.createElement('img');
+  cardImage.src = imgUrl;
+  cardImage.alt = dogName;
+  cardImage.classList.add('card-image');
+
+  const cardContent = document.createElement('div');
+  cardContent.classList.add('card-content');
+
+  const cardTitle = document.createElement('h3');
+  cardTitle.textContent = dogName;
+
+  const cardDescription = document.createElement('p');
+  cardDescription.textContent = `Idade: ${dogIdade} anos`;
+
+  const chatButton = document.createElement('button');
+  chatButton.textContent = 'Chat';
+  chatButton.classList.add('chat-button');
+  chatButton.addEventListener('click', () => openChat(dogName));
+
+  cardContent.appendChild(cardTitle);
+  cardContent.appendChild(cardDescription);
+  cardContent.appendChild(chatButton);
+  cardItem.appendChild(cardImage);
+  cardItem.appendChild(cardContent);
+  leftWindow.appendChild(cardItem);
+}
+
+// carregar favoritos do localStorage ao iniciar
+function loadFavorites() {
+  const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+  favorites.forEach(updateLeftWindow);
+}
+
+//modificar o handleClick para ignorar a primeira imagem
+async function handleClick(event) {
+  const isLikeButton = event.target.id === 'like-btn';
+
+  //remove o card atual
+  const topCard = cardContainer.querySelector('.card:last-child');
+  if (topCard) topCard.remove();
+
+  //ignorar a primeira img
+  if (isFirstImage) {
+    isFirstImage = false;
+  } else if (isLikeButton && topCard) {
+    const currentImgUrl = topCard.style.backgroundImage.slice(5, -2);
+    const currentDogName = topCard.querySelector('.nome').textContent.split(' - ')[0];
+    const currentDogIdade = topCard.querySelector('.nome').textContent.split(' - ')[1];
+    saveToFavorites(currentImgUrl, currentDogName, currentDogIdade);
+  }
+
+  //busca nova imagem e cria um novo card no final
+  const imgUrl = await fetchRandomDogImage();
+  const dogName = await fetchRandomDogName();
+  const dogIdade = gerarNumeroAleatorio(1, 12);
+
+  const newCard = document.createElement('div');
+  newCard.classList.add('card');
+  newCard.style.backgroundImage = `url('${imgUrl}')`;
+  const newName = document.createElement('div');
+  newName.classList.add('info-container');
+  newName.classList.add('nome');
+  newName.textContent = `${dogName} - ${dogIdade}`;
+  cardContainer.prepend(newCard);
+  newCard.appendChild(newName);
+}
+
+//carregar favoritos ao entrar no navegador
+loadFavorites();
+
+likeBtn.addEventListener('click', handleClick);
+dislikeBtn.addEventListener('click', handleClick);
+
+//container de chat
+const chatContainer = document.createElement('div');
+chatContainer.classList.add('chat-container');
+chatContainer.style.display = 'none';
+document.body.appendChild(chatContainer);
+  </script>
+</body>
+</html>
